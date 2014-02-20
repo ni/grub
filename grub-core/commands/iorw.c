@@ -26,6 +26,7 @@
 
 GRUB_MOD_LICENSE ("GPLv3+");
 
+static grub_extcmd_t cmd_read_bit;
 static grub_extcmd_t cmd_read_byte, cmd_read_word, cmd_read_dword;
 static grub_command_t cmd_write_byte, cmd_write_word, cmd_write_dword;
 
@@ -35,7 +36,6 @@ static const struct grub_arg_option options[] =
      N_("VARNAME"), ARG_TYPE_STRING},
     {0, 0, 0, 0, 0, 0}
   };
-
 
 static grub_err_t
 grub_cmd_read (grub_extcmd_context_t ctxt, int argc, char **argv)
@@ -70,6 +70,32 @@ grub_cmd_read (grub_extcmd_context_t ctxt, int argc, char **argv)
     }
   else
     grub_printf ("0x%x\n", value);
+
+  return 0;
+}
+
+static grub_err_t
+grub_cmd_read_bit(grub_extcmd_context_t ctxt, int argc, char **argv)
+{
+  grub_port_t addr;
+  grub_uint32_t index = 0;
+  grub_uint32_t value = 0;
+
+  if (argc != 2)
+    return grub_error (GRUB_ERR_BAD_ARGUMENT, N_("two arguments expected: address and bit index"));
+
+  addr = grub_strtoul (argv[0], 0, 0);
+  index  = grub_strtoul (argv[1], 0, 0);
+  value = grub_inb (addr);
+
+  if (ctxt->state[0].set)
+    {
+      char buf[sizeof ("XXXXXXXX")];
+      grub_snprintf (buf, sizeof (buf), "%d", (value & (1 << index)) ? 1 : 0);
+      grub_env_set (ctxt->state[0].arg, buf);
+    }
+  else
+    grub_printf ("%d\n", (value & (1 << index)) ? 1 : 0);
 
   return 0;
 }
@@ -130,6 +156,10 @@ GRUB_MOD_INIT(memrw)
     grub_register_extcmd ("inl", grub_cmd_read, 0,
 			  N_("PORT"), N_("Read 32-bit value from PORT."),
 			  options);
+  cmd_read_bit =
+    grub_register_extcmd ("inbit", grub_cmd_read_bit, 0,
+			  N_("PORT"), N_("Read 1-bit value from PORT."),
+			  options);
   cmd_write_byte =
     grub_register_command ("outb", grub_cmd_write,
 			   N_("PORT VALUE [MASK]"),
@@ -149,6 +179,7 @@ GRUB_MOD_FINI(memrw)
   grub_unregister_extcmd (cmd_read_byte);
   grub_unregister_extcmd (cmd_read_word);
   grub_unregister_extcmd (cmd_read_dword);
+  grub_unregister_extcmd (cmd_read_bit);
   grub_unregister_command (cmd_write_byte);
   grub_unregister_command (cmd_write_word);
   grub_unregister_command (cmd_write_dword);

@@ -80,22 +80,22 @@ grub_cmd_read_bit(grub_extcmd_context_t ctxt, int argc, char **argv)
   grub_port_t addr;
   grub_uint32_t index = 0;
   grub_uint32_t value = 0;
-
+  grub_uint32_t bit_value = 0;
   if (argc != 2)
     return grub_error (GRUB_ERR_BAD_ARGUMENT, N_("two arguments expected: address and bit index"));
 
   addr = grub_strtoul (argv[0], 0, 0);
   index  = grub_strtoul (argv[1], 0, 0);
   value = grub_inb (addr);
-
+  bit_value = (value & (1 << index)) ? 1 : 0;
   if (ctxt->state[0].set)
     {
       char buf[sizeof ("XXXXXXXX")];
-      grub_snprintf (buf, sizeof (buf), "%d", (value & (1 << index)) ? 1 : 0);
+      grub_snprintf (buf, sizeof (buf), "%d", bit_value);
       grub_env_set (ctxt->state[0].arg, buf);
     }
   else
-    grub_printf ("%d\n", (value & (1 << index)) ? 1 : 0);
+    grub_printf ("%d\n", bit_value);
 
   return 0;
 }

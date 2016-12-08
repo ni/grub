@@ -5034,6 +5034,8 @@ the strings are not equal
 @var{integer1} is less than @var{integer2}
 @item @var{integer1} @code{-ne} @var{integer2}
 @var{integer1} is not equal to @var{integer2}
+@item @var{integer1} @code{-bwa} @var{integer2}
+Performs a bitwise AND between @var{integer1} and @var{integer2}
 @item @var{prefix}@var{integer1} @code{-pgt} @var{prefix}@var{integer2}
 @var{integer1} is greater than @var{integer2} after stripping off common non-numeric @var{prefix}.
 @item @var{prefix}@var{integer1} @code{-plt} @var{prefix}@var{integer2}

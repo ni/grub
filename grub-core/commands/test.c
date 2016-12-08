@@ -290,6 +290,16 @@ test_parse (char **args, int *argn, int argc)
 	      continue;
 	    }
 
+	  /* GRUB extension: bitwise AND */
+	  if (grub_strcmp (args[*argn + 1], "-bwa") == 0)
+	    {
+	      update_val (grub_strtoul (args[*argn], 0, 0)
+			  & grub_strtoul (args[*argn + 2], 0, 0), &ctx);
+	      (*argn) += 3;
+	      continue;
+	    }
+
+
 	  /* -nt and -ot tests. GRUB extension: when doing -?t<bias> bias
 	     will be added to the first mtime. */
 	  if (grub_memcmp (args[*argn + 1], "-nt", 3) == 0

@@ -181,17 +181,13 @@ command-line or ESC to discard edits and return to the GRUB menu."),
       if (nested)
 	{
 	  ret += grub_print_message_indented_real
-	    (_("Press enter to boot the selected OS, "
-	       "`e' to edit the commands before booting "
-	       "or `c' for a command-line. ESC to return previous menu."),
+	    (_("Press enter to boot the selected OS. "),
 	     STANDARD_MARGIN, STANDARD_MARGIN, term, dry_run);
 	}
       else
 	{
 	  ret += grub_print_message_indented_real
-	    (_("Press enter to boot the selected OS, "
-	       "`e' to edit the commands before booting "
-	       "or `c' for a command-line."),
+	    (_("Press enter to boot the selected OS. "),
 	     STANDARD_MARGIN, STANDARD_MARGIN, term, dry_run);
 	}	
     }

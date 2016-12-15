@@ -208,7 +208,7 @@ grub_normal_init_page (struct grub_term_output *term,
  
   grub_term_cls (term);
 
-  msg_formatted = grub_xasprintf (_("GNU GRUB  version %s"), PACKAGE_VERSION);
+  msg_formatted = grub_xasprintf (_("NI Linux Real-Time Boot Options"));
   if (!msg_formatted)
     return;
  
